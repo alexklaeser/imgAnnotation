@@ -1,0 +1,355 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>945</width>
+    <height>844</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>ImageAnnotation</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" />
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>945</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp" >
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionShortcutHelp" />
+   </widget>
+   <widget class="QMenu" name="menuMenu" >
+    <property name="title" >
+     <string>&amp;Database</string>
+    </property>
+    <addaction name="actionOpenDatabase" />
+    <addaction name="actionSaveDatabase" />
+    <addaction name="actionSaveDatabaseAs" />
+    <addaction name="separator" />
+    <addaction name="actionExtractImages" />
+    <addaction name="separator" />
+    <addaction name="actionQuit" />
+   </widget>
+   <widget class="QMenu" name="menuEdit" >
+    <property name="title" >
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actionCopyObj" />
+    <addaction name="actionPasteObj" />
+   </widget>
+   <addaction name="menuMenu" />
+   <addaction name="menuEdit" />
+   <addaction name="menuHelp" />
+  </widget>
+  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QDockWidget" name="objDockWidget" >
+   <property name="sizePolicy" >
+    <sizepolicy>
+     <hsizetype>5</hsizetype>
+     <vsizetype>5</vsizetype>
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features" >
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle" >
+    <string>Objects in Image</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="objDockWidgetContents" >
+    <layout class="QVBoxLayout" >
+     <property name="margin" >
+      <number>9</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QTableWidget" name="objTableWidget" >
+       <property name="horizontalScrollBarPolicy" >
+        <enum>Qt::ScrollBarAsNeeded</enum>
+       </property>
+       <property name="alternatingRowColors" >
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <property name="selectionBehavior" >
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLineEdit" name="propertyLineEdit" />
+       </item>
+       <item>
+        <widget class="QPushButton" name="addPropertyButton" >
+         <property name="text" >
+          <string>Add Property</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::MinimumExpanding</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>131</width>
+           <height>27</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="addObjButton" >
+         <property name="text" >
+          <string>Add Object</string>
+         </property>
+         <property name="shortcut" >
+          <string>Ins</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="delObjButton" >
+         <property name="text" >
+          <string>Delete Objects</string>
+         </property>
+         <property name="shortcut" >
+          <string>Del</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="imgDockWidget" >
+   <property name="sizePolicy" >
+    <sizepolicy>
+     <hsizetype>5</hsizetype>
+     <vsizetype>5</vsizetype>
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features" >
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle" >
+    <string>Images in Data Base</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="imgDockWidgetContents" >
+    <layout class="QVBoxLayout" >
+     <property name="margin" >
+      <number>9</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="imgTreeWidget" >
+       <property name="editTriggers" >
+        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode" >
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+       <property name="indentation" >
+        <number>20</number>
+       </property>
+       <property name="uniformRowHeights" >
+        <bool>true</bool>
+       </property>
+       <property name="sortingEnabled" >
+        <bool>true</bool>
+       </property>
+       <column>
+        <property name="text" >
+         <string>File/Directory</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="addImgButton" >
+         <property name="text" >
+          <string>Add File</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="delImgButton" >
+         <property name="text" >
+          <string>Delete Files</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="zoomLabel" >
+         <property name="text" >
+          <string>Zoom (in %):</string>
+         </property>
+         <property name="buddy" >
+          <cstring></cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="zoomSpinBox" >
+         <property name="maximum" >
+          <double>19.989999999999998</double>
+         </property>
+         <property name="minimum" >
+          <double>0.010000000000000</double>
+         </property>
+         <property name="singleStep" >
+          <double>0.250000000000000</double>
+         </property>
+         <property name="value" >
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actionOpenDatabase" >
+   <property name="text" >
+    <string>&amp;Open Database</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSaveDatabase" >
+   <property name="text" >
+    <string>&amp;Save Database</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionQuit" >
+   <property name="text" >
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionSaveDatabaseAs" >
+   <property name="text" >
+    <string>Save Database &amp;As ...</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionShortcutHelp" >
+   <property name="text" >
+    <string>&amp;Shortcuts</string>
+   </property>
+  </action>
+  <action name="actionCopyObj" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Copy Object</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionPasteObj" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Paste Object</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionExtractImages" >
+   <property name="text" >
+    <string>&amp;Extract Images</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
