@@ -129,6 +129,10 @@ ImageExtractDialog::ImageExtractDialog(ImgAnnotations *annotations, QString *dat
 
 	// make some connections
 	connect(scrollArea, SIGNAL(wheelTurned(QWheelEvent*)), this, SLOT(onWheelTurnedInScrollArea(QWheelEvent *)));
+	connect(leftBorderSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateOutputSizeLabel()));
+	connect(rightBorderSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateOutputSizeLabel()));
+	connect(topBorderSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateOutputSizeLabel()));
+	connect(bottomBorderSpinBox, SIGNAL(valueChanged(int)), this, SLOT(updateOutputSizeLabel()));
 }
 
 void ImageExtractDialog::fillAnnotationData()
@@ -1119,10 +1123,12 @@ void ImageExtractDialog::refreshFilteredObjView()
 	}
 
 	// clear the filteredObjTreeWidget
+	filteredObjTreeWidget->blockSignals(true);
+	filteredObjTreeWidget->setUpdatesEnabled(false);
 	filteredObjTreeWidget->clear();
 
 	// loop through the filtered objects and add them to the filteredObjTreeWidget
-	QTreeWidgetItem *newItem;
+	QList<QTreeWidgetItem*> newItems;
 	QString tmpStr;
 	BOOST_FOREACH(ID objID, filteredObjIDs2) {
 		Object *obj = orgAnnotations->getObject(objID);
@@ -1132,13 +1138,15 @@ void ImageExtractDialog::refreshFilteredObjView()
 		QString imgDirPath = QString::fromStdString(ImgAnnotations::dirPath(obj->getFilePath()));
 		QString imgFileName = QString::fromStdString(ImgAnnotations::fileName(obj->getFilePath()));
 
-		newItem = new QTreeWidgetItem(filteredObjTreeWidget);
+		QTreeWidgetItem *newItem = new QTreeWidgetItem();
 		newItem->setText(0, QString::fromStdString(obj->get("type")));
 		newItem->setText(1, imgFileName);
 		newItem->setText(2, imgDirPath);
 		tmpStr.setNum(objID);
 		newItem->setText(3, tmpStr);
+		newItems.append(newItem);
 	}
+	filteredObjTreeWidget->addTopLevelItems(newItems);
 
 	// resize the columns such that they fit the data
 	filteredObjTreeWidget->resizeColumnToContents(0);
@@ -1148,6 +1156,10 @@ void ImageExtractDialog::refreshFilteredObjView()
 	// sort the elements
 	filteredObjTreeWidget->sortItems(1, Qt::AscendingOrder);
 	filteredObjTreeWidget->sortItems(2, Qt::AscendingOrder);
+
+	// unblock tree view
+	filteredObjTreeWidget->blockSignals(false);
+	filteredObjTreeWidget->setUpdatesEnabled(true);
 
 	// now choose the right item as current viewed item
 	QTreeWidgetItem* foundItem = NULL;
@@ -1170,7 +1182,7 @@ void ImageExtractDialog::computeWidth()
 	if (normMaxBottom - normMinTop != 0)
 		width = ((normMaxRight - normMinLeft) / (normMaxBottom - normMinTop)) * height;
 	widthSpinBox->setValue((int)roundf(width));
-
+	updateOutputSizeLabel();
 }
 
 void ImageExtractDialog::computeHeight()
@@ -1181,6 +1193,13 @@ void ImageExtractDialog::computeHeight()
 	if (normMaxRight - normMinLeft != 0)
 		height = ((normMaxBottom - normMinTop) / (normMaxRight - normMinLeft)) * width;
 	heightSpinBox->setValue((int)roundf(height));
+	updateOutputSizeLabel();
+}
+
+void ImageExtractDialog::updateOutputSizeLabel()
+{
+	outputSizeLabel->setText(QString::number(widthSpinBox->value() + leftBorderSpinBox->value() + rightBorderSpinBox->value()) 
+			+ "x" + QString::number(heightSpinBox->value() + topBorderSpinBox->value() + bottomBorderSpinBox->value()));
 }
 
 void ImageExtractDialog::onWheelTurnedInScrollArea(QWheelEvent *event)

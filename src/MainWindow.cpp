@@ -668,12 +668,14 @@ void MainWindow::refreshImgView()
 {
 	// clear all items
 	imgTreeWidget->blockSignals(true);
+	imgTreeWidget->setUpdatesEnabled(false);
 	imgTreeWidget->clear();
 
 	// add all dirs and files to the QTreeWidget
+	QList<QTreeWidgetItem*> newItems;
 	BOOST_FOREACH(Dir *dir, annotations.getDirs()) {
 		// construct a new directory entry
-		QTreeWidgetItem *dirItem = new QTreeWidgetItem(imgTreeWidget);
+		QTreeWidgetItem *dirItem = new QTreeWidgetItem();
 		imgTreeWidget->setItemExpanded(dirItem, true);
 		dirItem->setText(0, QString::fromStdString(dir->getDirPath()));
 
@@ -682,12 +684,19 @@ void MainWindow::refreshImgView()
 			QTreeWidgetItem *fileEntry = new QTreeWidgetItem(dirItem);
 			fileEntry->setText(0, QString::fromStdString(fileName));
 		}
+		
+		// collect item in list
+		newItems.append(dirItem);
 	}
 
+	// add all items at once to the tree widget
+	imgTreeWidget->addTopLevelItems(newItems);
+	
 	// sort the files + directories
 	imgTreeWidget->sortItems(0, Qt::AscendingOrder);
 
 	// unblock signals
+	imgTreeWidget->setUpdatesEnabled(true);
 	imgTreeWidget->blockSignals(false);
 }
 

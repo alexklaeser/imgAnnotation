@@ -80,6 +80,7 @@ public slots:
 	void on_removeConstraintsButton_clicked();
 	void on_addNotConstraintButton_clicked();
 	void on_removeNotConstraintsButton_clicked();
+	void updateOutputSizeLabel();
 
 private slots:
 	void onWheelTurnedInScrollArea(QWheelEvent *);

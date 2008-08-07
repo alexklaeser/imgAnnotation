@@ -8,10 +8,10 @@ contains (ARCH, x86_64):BIT=64
 
 # some project options
 TEMPLATE = app
-CONFIG += debug \
+CONFIG += release \
           warn_on \
           qt
-DESTDIR = debug$${BIT}
+DESTDIR = release$${BIT}
 
 # dirs for automatically generated files
 MOC_DIR = src/tmp
