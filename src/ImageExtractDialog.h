@@ -63,6 +63,7 @@ private:
 	void refreshFilteredObjView();
 	QImage loadImg(QString);
 	QPixmap sampleObj(QImage&, IA::ID, bool drawBoundingBox = false);
+	QRectF getCropRect(IA::ID);
 	QPixmap cropObj(QImage&, IA::ID, bool drawBoundingBox = false,
 			double xTranslate = 0, double yTranslate = 0, double scale = 1,
 			double aspectRatio = 1, double xShear = 0, double yShear = 0, double rotateDegree = 0, double imgSizeScale = 1,
@@ -72,6 +73,7 @@ public slots:
 	int exec();
 	void on_applyButton_clicked();
 	void on_saveButton_clicked();
+	void on_saveAlignmentButton_clicked();
 	void on_generateSamplesButton_clicked();
 	void on_widthSpinBox_valueChanged(int);
 	void on_heightSpinBox_valueChanged(int);

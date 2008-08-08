@@ -491,6 +491,135 @@ QImage ImageExtractDialog::loadImg(QString filePath)
 	return QImage(filePath);
 }
 
+QRectF ImageExtractDialog::getCropRect(ID objID)
+{
+	// check wether dir/file/object have been selected
+	Object *obj = orgAnnotations->getObject(objID);
+	if (NULL == obj)
+		return QRectF();
+
+	//
+	// crop the object out of the image
+	//
+
+	QRectF box = str2rect(QString::fromStdString(obj->get("bbox")));
+	QList<QPointF> fixPoints = str2points(QString::fromStdString(obj->get("fixpoints")));
+
+	// compute the selectedCenter point of the fix points
+	double norm;
+	QPointF centerFixPoints, centerPoint;
+	centerFixPoints.rx() = 0;
+	centerFixPoints.ry() = 0;
+	if (fixPoints.count() > 0) {
+		for (int iFixPoint = 0; iFixPoint < fixPoints.count(); iFixPoint++)
+			centerFixPoints += fixPoints[iFixPoint];
+		centerFixPoints.rx() /= fixPoints.count();
+		centerFixPoints.ry() /= fixPoints.count();
+	}
+
+	// compute the normalization factor
+	if (selectedScale == StdDevFixPointsScale) {
+		// compute the std deviation as normalization for x and y direction
+		norm = 0;
+		if (fixPoints.count() > 0) {
+			for (int iFixPoint = 0; iFixPoint < fixPoints.count(); iFixPoint++) {
+				norm += pow(centerFixPoints.x() - fixPoints[iFixPoint].x(), 2);
+				norm += pow(centerFixPoints.y() - fixPoints[iFixPoint].y(), 2);
+			}
+			norm = sqrt(norm / (2 * fixPoints.count()));
+		}
+	}
+	else if (selectedScale == HeightScale)
+		norm = box.height();
+	else if (selectedScale == WidthScale)
+		norm = box.width();
+	else
+		// otherwise we take the longest side of the bounding box as factor
+		norm = MAX(box.width(), box.height());
+
+	// set the selectedCenter point of the object
+	if (selectedCenter == FixPointsCenter)
+		centerPoint = centerFixPoints;
+	else
+		centerPoint = box.center();
+
+	// compute the rotation of the sample with help of the fix points
+	double rotation = 0;
+	if (normalizeRotation) {
+		int i1 = rotationNormComboBox1->currentIndex();
+		int i2 = rotationNormComboBox2->currentIndex();
+		Q_ASSERT(i1 > 0);
+		Q_ASSERT(i2 > 0);
+		Q_ASSERT(i1 != i2);
+
+		// get the correct points in order to compute the rotation
+		QPointF rotationPoint1, rotationPoint2;
+		if (i1 == 1)
+			rotationPoint1 = centerFixPoints;
+		else {
+			Q_ASSERT(i1 - 2 >= 0);
+			Q_ASSERT(i1 - 2 < fixPoints.count());
+			rotationPoint1 = fixPoints[i1 - 2];
+		}
+		if (i2 == 1)
+			rotationPoint2 = centerFixPoints;
+		else {
+			Q_ASSERT(i2 - 2 >= 0);
+			Q_ASSERT(i2 - 2 < fixPoints.count());
+			rotationPoint2 = fixPoints[i2 - 2];
+		}
+		// compute the orientation relative to the mean rotation
+		rotation = atan2(rotationPoint1.x() - rotationPoint2.x(), rotationPoint1.y() - rotationPoint2.y());
+		while (rotation < 0)
+			rotation += 2 * M_PI;
+		while (rotation > 2 * M_PI)
+			rotation -= 2 * M_PI;
+	}
+
+	// compute which part of the image we have to crop
+	QRectF cropF;
+	cropF.setTop(centerPoint.y() + normMinTop * norm);
+	cropF.setBottom(centerPoint.y() + normMaxBottom * norm);
+	cropF.setLeft(centerPoint.x() + normMinLeft * norm);
+	cropF.setRight(centerPoint.x() + normMaxRight * norm);
+
+	// compute the size we are going to.scale the cropped image to
+	double width = widthSpinBox->value();
+	double height = heightSpinBox->value();
+
+	// compute where the selectedCenter point lies in the image
+	double centerImgX = (width * -1 * normMinLeft) / (normMaxRight - normMinLeft);
+	double centerImgY = (height * -1 * normMinTop) / (normMaxBottom - normMinTop);
+
+	// get the zoom factor .. i.e. the smallest factor given by the distance of
+	// the selectedCenter point in the output image and its borders divided by the
+	// object selectedCenter point in the original image and its bounding box borders
+	double zoomFactor = 1000000; // some big number to init the value
+	if (centerPoint.x() - cropF.left() != 0)
+		zoomFactor = MIN(zoomFactor, centerImgX / (centerPoint.x() - cropF.left()));
+	if (cropF.right() - centerPoint.x() != 0)
+		zoomFactor = MIN(zoomFactor, (width - centerImgX) / (cropF.right() - centerPoint.x()));
+	if (centerPoint.y() - cropF.top() != 0)
+		zoomFactor = MIN(zoomFactor, centerImgY / (centerPoint.y() - cropF.top()));
+	if (cropF.bottom() - centerPoint.x() != 0)
+		zoomFactor = MIN(zoomFactor, (height - centerImgY) / (cropF.bottom() - centerPoint.y()));
+
+	// get the margins
+	int borderTop = topBorderSpinBox->value();
+	int borderBottom = bottomBorderSpinBox->value();
+	int borderLeft = leftBorderSpinBox->value();
+	int borderRight = rightBorderSpinBox->value();
+	
+	// add margins
+	cropF.setLeft(cropF.left() - borderLeft / zoomFactor);
+	cropF.setRight(cropF.right() + borderRight / zoomFactor);
+	cropF.setTop(cropF.top() - borderTop / zoomFactor);
+	cropF.setBottom(cropF.bottom() + borderBottom / zoomFactor);
+	
+	return cropF;
+}
+
+
 QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBoundingBox,
 		double xTranslate, double yTranslate, double scale,
 		double aspectRatio, double xShear, double yShear, double rotateDegree, double imgSizeScale,
@@ -590,10 +719,6 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 	// compute the size we are going to.scale the cropped image to
 	double width = widthSpinBox->value() * imgSizeScale;
 	double height = heightSpinBox->value() * imgSizeScale;
-	if (heightRadioButton->isChecked() && normMaxBottom - normMinTop != 0)
-		width = ((normMaxRight - normMinLeft) / (normMaxBottom - normMinTop)) * height;
-	else if (widthRadioButton->isChecked() && normMaxRight - normMinLeft != 0)
-		height = ((normMaxBottom - normMinTop) / (normMaxRight - normMinLeft)) * width;
 
 	// compute where the selectedCenter point lies in the image
 	double centerImgX = (width * -1 * normMinLeft) / (normMaxRight - normMinLeft);
@@ -791,6 +916,55 @@ void ImageExtractDialog::on_removeNotConstraintsButton_clicked()
 			--i;
 		}
 	}
+}
+
+void ImageExtractDialog::on_saveAlignmentButton_clicked()
+{
+	// ask the user to add files
+	QString file = QFileDialog::getSaveFileName(
+ 			this,
+			"Save Alignment as ...",
+			lastOpenedDir,
+			"Annotation Database (*.annotation)");
+
+	if (file.isEmpty())
+		return;
+
+	// check wether an extension has been given
+	if (!file.section('/', -1).contains('.'))
+		file += ".annotation";
+	
+	// create a annotations file with all files and the aligned objects
+	IA::ImgAnnotations alignments;
+	BOOST_FOREACH(const std::string& str, orgAnnotations->getFilePaths()) {
+		QString imgFilePath = QString::fromStdString(str);
+
+		// get the absolute path to the image file
+		if (imgFilePath[0] != '/')
+			imgFilePath = *orgDatabasePath + "/" + imgFilePath;
+
+		// add file to alignments data base
+		alignments.addFile(imgFilePath.toStdString());
+	}
+	BOOST_FOREACH(ID objID, filteredObjIDs2) {
+		Object *obj = orgAnnotations->getObject(objID);
+		Q_CHECK_PTR(obj);
+
+		// get the image file
+		QString imgFilePath = QString::fromStdString(obj->getFilePath());
+	
+		// get the absolute path to the image file
+		if (imgFilePath[0] != '/')
+			imgFilePath = *orgDatabasePath + "/" + imgFilePath;
+
+		// create a new object and assign the aligned bounding box
+		Object* newObj = alignments.newObject(imgFilePath.toStdString());
+		QRectF box = getCropRect(objID);
+		newObj->set("bbox", rect2str(box).toStdString());
+	}
+
+	// save the data and chage the cursor to a waiting cursor
+	alignments.saveToFile(file.toStdString());
 }
 
 void ImageExtractDialog::on_saveButton_clicked()
