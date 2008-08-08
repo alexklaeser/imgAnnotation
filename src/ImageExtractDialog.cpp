@@ -961,6 +961,33 @@ void ImageExtractDialog::on_saveAlignmentButton_clicked()
 		Object* newObj = alignments.newObject(imgFilePath.toStdString());
 		QRectF box = getCropRect(objID);
 		newObj->set("bbox", rect2str(box).toStdString());
+		
+		// get the original bounding box and the fix points
+		box = str2rect(QString::fromStdString(obj->get("bbox")));
+		QList<QPointF> fixPoints = str2points(QString::fromStdString(obj->get("fixpoints")));
+
+		// compute the selectedCenter point of the fix points
+		QPointF centerFixPoints;
+		centerFixPoints.rx() = 0;
+		centerFixPoints.ry() = 0;
+		if (fixPoints.count() > 0) {
+			for (int iFixPoint = 0; iFixPoint < fixPoints.count(); iFixPoint++)
+				centerFixPoints += fixPoints[iFixPoint];
+			centerFixPoints.rx() /= fixPoints.count();
+			centerFixPoints.ry() /= fixPoints.count();
+		}
+
+		// set the selectedCenter point of the object
+		QPointF centerPoint;
+		if (selectedCenter == FixPointsCenter)
+			centerPoint = centerFixPoints;
+		else
+			centerPoint = box.center();
+		
+		// save the center point
+		QList<QPointF> tmpPoints;
+		tmpPoints.append(centerPoint);
+		newObj->set("center", points2str(tmpPoints).toStdString());
 	}
 
 	// save the data and chage the cursor to a waiting cursor
