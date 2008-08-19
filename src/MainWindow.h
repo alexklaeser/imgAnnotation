@@ -73,6 +73,7 @@ public slots:
 //	void on_propertiesTableWidget_itemChanged();
 //	void on_objTypeComboBox_currentIndexChanged(const QString &);
 	void on_imgTreeWidget_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
+	void on_objTableWidget_itemSelectionChanged();
 	void on_objTableWidget_currentItemChanged(QTableWidgetItem *, QTableWidgetItem *);
 	void on_objTableWidget_itemChanged(QTableWidgetItem*);
 	void onPixmapWidgetActiveObjectChanged(IA::ID);

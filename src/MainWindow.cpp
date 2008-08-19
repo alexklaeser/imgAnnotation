@@ -501,6 +501,10 @@ void MainWindow::on_imgTreeWidget_currentItemChanged(QTreeWidgetItem *current, Q
 void MainWindow::on_objTableWidget_currentItemChanged(QTableWidgetItem *, QTableWidgetItem *)
 {
 	emit activeObjectChanged(currentObjectID());
+}
+
+void MainWindow::on_objTableWidget_itemSelectionChanged()
+{
 	IDList selectedObjs = selectedObjectIDs();
 	if (selectedObjs.size() <= 1)
 		emit selectedObjectsChanged(fileObjectIDs());

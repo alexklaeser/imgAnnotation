@@ -19,7 +19,7 @@
      <x>0</x>
      <y>0</y>
      <width>945</width>
-     <height>29</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuHelp" >
@@ -54,9 +54,7 @@
   <widget class="QStatusBar" name="statusbar" />
   <widget class="QDockWidget" name="objDockWidget" >
    <property name="sizePolicy" >
-    <sizepolicy>
-     <hsizetype>5</hsizetype>
-     <vsizetype>5</vsizetype>
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -72,11 +70,20 @@
    </attribute>
    <widget class="QWidget" name="objDockWidgetContents" >
     <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>9</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>9</number>
+     </property>
+     <property name="topMargin" >
+      <number>9</number>
+     </property>
+     <property name="rightMargin" >
+      <number>9</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>9</number>
      </property>
      <item>
       <widget class="QTableWidget" name="objTableWidget" >
@@ -99,11 +106,20 @@
      </item>
      <item>
       <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
        <property name="spacing" >
         <number>6</number>
+       </property>
+       <property name="leftMargin" >
+        <number>0</number>
+       </property>
+       <property name="topMargin" >
+        <number>0</number>
+       </property>
+       <property name="rightMargin" >
+        <number>0</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>0</number>
        </property>
        <item>
         <widget class="QLineEdit" name="propertyLineEdit" />
@@ -134,7 +150,7 @@
        <item>
         <widget class="QPushButton" name="addObjButton" >
          <property name="text" >
-          <string>Add Object</string>
+          <string>&amp;Add Object</string>
          </property>
          <property name="shortcut" >
           <string>Ins</string>
@@ -144,7 +160,7 @@
        <item>
         <widget class="QPushButton" name="delObjButton" >
          <property name="text" >
-          <string>Delete Objects</string>
+          <string>&amp;Delete Objects</string>
          </property>
          <property name="shortcut" >
           <string>Del</string>
@@ -158,9 +174,7 @@
   </widget>
   <widget class="QDockWidget" name="imgDockWidget" >
    <property name="sizePolicy" >
-    <sizepolicy>
-     <hsizetype>5</hsizetype>
-     <vsizetype>5</vsizetype>
+    <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
      <horstretch>0</horstretch>
      <verstretch>0</verstretch>
     </sizepolicy>
@@ -176,11 +190,20 @@
    </attribute>
    <widget class="QWidget" name="imgDockWidgetContents" >
     <layout class="QVBoxLayout" >
-     <property name="margin" >
-      <number>9</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>9</number>
+     </property>
+     <property name="topMargin" >
+      <number>9</number>
+     </property>
+     <property name="rightMargin" >
+      <number>9</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>9</number>
      </property>
      <item>
       <widget class="QTreeWidget" name="imgTreeWidget" >
@@ -208,11 +231,20 @@
      </item>
      <item>
       <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
        <property name="spacing" >
         <number>6</number>
+       </property>
+       <property name="leftMargin" >
+        <number>0</number>
+       </property>
+       <property name="topMargin" >
+        <number>0</number>
+       </property>
+       <property name="rightMargin" >
+        <number>0</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>0</number>
        </property>
        <item>
         <widget class="QPushButton" name="addImgButton" >
@@ -232,11 +264,20 @@
      </item>
      <item>
       <layout class="QHBoxLayout" >
-       <property name="margin" >
-        <number>0</number>
-       </property>
        <property name="spacing" >
         <number>6</number>
+       </property>
+       <property name="leftMargin" >
+        <number>0</number>
+       </property>
+       <property name="topMargin" >
+        <number>0</number>
+       </property>
+       <property name="rightMargin" >
+        <number>0</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="zoomLabel" >
@@ -250,11 +291,11 @@
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="zoomSpinBox" >
-         <property name="maximum" >
-          <double>19.989999999999998</double>
-         </property>
          <property name="minimum" >
           <double>0.010000000000000</double>
+         </property>
+         <property name="maximum" >
+          <double>19.989999999999998</double>
          </property>
          <property name="singleStep" >
           <double>0.250000000000000</double>
