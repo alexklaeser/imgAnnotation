@@ -150,10 +150,10 @@
        <item>
         <widget class="QPushButton" name="addObjButton" >
          <property name="text" >
-          <string>&amp;Add Object</string>
+          <string>&amp;New Object</string>
          </property>
          <property name="shortcut" >
-          <string>Alt+A</string>
+          <string>Ctrl+N</string>
          </property>
         </widget>
        </item>
@@ -163,7 +163,7 @@
           <string>&amp;Delete Objects</string>
          </property>
          <property name="shortcut" >
-          <string>Alt+D</string>
+          <string>Ctrl+D</string>
          </property>
         </widget>
        </item>

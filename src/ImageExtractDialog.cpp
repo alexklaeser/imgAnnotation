@@ -959,6 +959,7 @@ void ImageExtractDialog::on_saveAlignmentButton_clicked()
 
 		// create a new object and assign the aligned bounding box
 		Object* newObj = alignments.newObject(imgFilePath.toStdString());
+		*newObj = *obj;
 		QRectF box = getCropRect(objID);
 		newObj->set("bbox", rect2str(box).toStdString());
 		

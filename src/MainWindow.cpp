@@ -262,11 +262,11 @@ void MainWindow::on_actionShortcutHelp_triggered()
  	QMessageBox::about(this, "Shortcut Help",
 			"<table border=0 cellpadding=0 cellspacing=2>\n"
 			"<tr>\n"
-				"<td><b>Insert</b></td>\n"
+				"<td><b>Ctrl+N</b></td>\n"
 				"<td width=10></td>\n"
 				"<td>create a new object</td>\n"
 			"</tr><tr>\n"
-				"<td><b>Delete</b></td>\n"
+				"<td><b>Ctrl+D</b></td>\n"
 				"<td width=10></td>\n"
 				"<td>delete the current object</td>\n"
 			"</tr><tr>\n"
