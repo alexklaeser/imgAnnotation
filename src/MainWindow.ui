@@ -153,7 +153,7 @@
           <string>&amp;Add Object</string>
          </property>
          <property name="shortcut" >
-          <string>Ins</string>
+          <string>Alt+A</string>
          </property>
         </widget>
        </item>
@@ -163,7 +163,7 @@
           <string>&amp;Delete Objects</string>
          </property>
          <property name="shortcut" >
-          <string>Del</string>
+          <string>Alt+D</string>
          </property>
         </widget>
        </item>
@@ -388,6 +388,11 @@
    </property>
    <property name="shortcut" >
     <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="action_Add_Object" >
+   <property name="text" >
+    <string>&amp;Add Object</string>
    </property>
   </action>
  </widget>

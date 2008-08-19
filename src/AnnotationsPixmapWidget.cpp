@@ -452,6 +452,9 @@ void AnnotationsPixmapWidget::mousePressEvent(QMouseEvent * event)
 
 	if (mouseMode == Normal) {
 		if (mousePos == Somewhere) {
+			// save the original bounding box
+			_orgBox = box;
+			
 			// we start a new bounding box
 			box.setLeft(xyMouse.x());
 			box.setTop(xyMouse.y());
@@ -526,6 +529,14 @@ void AnnotationsPixmapWidget::mouseReleaseEvent(QMouseEvent * event)
 				box.setTop(box.bottom());
 				box.setBottom(tmp);
 			}
+			
+			// check whether the box is valid, otherwise restore the original box
+			if (box.width() * box.height() <= 10 && _orgBox.isValid()) {
+				box = _orgBox;
+				obj->set("bbox", rect2str(box).toStdString());
+		
+			}
+			_orgBox = QRectF();
 
 			// send the signal that the size of the bounding box has changed
 			emit objectContentChanged(activeObjID);
@@ -534,6 +545,9 @@ void AnnotationsPixmapWidget::mouseReleaseEvent(QMouseEvent * event)
 		// switch back to normal mouse mode
 		mouseMode = Normal;
 	}
+
+	// request a repaint
+	repaint();
 }
 
 void AnnotationsPixmapWidget::updateMouseCursor()

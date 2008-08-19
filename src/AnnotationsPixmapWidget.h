@@ -52,6 +52,7 @@ private:
 	IA::IDList visibleObjIDs;
 	IA::ID activeObjID;
 	int activeFixPoint;
+	QRectF _orgBox;
 
 	MousePosition mousePos;
 	MouseMode mouseMode;
