@@ -1,6 +1,7 @@
 #include "functions.h"
 #include <boost/foreach.hpp>
 #include <QListIterator>
+#include <QRegExp>
 
 
 QStringList std2qt(const std::list<std::string> &stdList) {
@@ -19,7 +20,7 @@ std::list<std::string> qt2std(const QStringList &qList) {
 
 QRectF str2rect(const QString &str) {
 	QRectF rect;
-	QStringList parts = str.split(",");
+	QStringList parts = str.split(QRegExp("x|,"));
 	if (parts.count() != 4)
 		return rect;
 
