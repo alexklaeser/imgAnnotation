@@ -19,10 +19,12 @@
 
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
-#include <opencv/cv.h>
 
+#ifndef NOOPENCV
+#include <opencv/cv.h>
 #include <opencv/functions.h>
 #include <opencv/IplImageWrapper.h>
+#endif
 
 #include <ImgAnnotations.h>
 #include "functions.h"
@@ -782,6 +784,7 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		tmpImg = imgFile;
 	QImage transformedImg = QImage(croppedScaledImg.size(), QImage::Format_RGB32);
 
+#ifndef NOOPENCV
 	// we will use the OpenCV library .. in order to avoid aliasing
 	// prepare two images .. scale the original image down and up, in this way
 	// we know that it will be save to use by the QPainter
@@ -831,6 +834,7 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		addGaussianNoise(cvImgTmp, noise, random);
 		cvCopy(cvImgTmp, &cvImgDest);
 	}
+#endif
 
 	// draw the down- and upscaled image
 	QPainter p(&croppedScaledImg);
