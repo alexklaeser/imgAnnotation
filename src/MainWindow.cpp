@@ -339,6 +339,19 @@ void MainWindow::on_addImgButton_clicked()
 	if (files.size() <= 0)
 		return;
 
+    /*
+    // It would be nice to have clean relative paths, but Alex only tolerates
+    // absolute ones. Otherwise he appends some random junk later on and
+    // everything breaks. So we leave this commented out until better times.
+    
+    QDir cwd = QDir::current();
+    for (QStringList::size_type i; i<files.size(); ++i)
+    {
+        QString relative = cwd.relativeFilePath(files[i]);
+        if (!relative.startsWith("..")) files[i] = relative;
+    }
+    */
+
 	// add files to the data structure
 	annotations.addFiles(qt2std(files));
 
@@ -474,9 +487,7 @@ void MainWindow::on_imgTreeWidget_currentItemChanged(QTreeWidgetItem *current, Q
 		return;
 
 	// check wether we have a relative or absolute path
-	QString absoluteDir;
-	if (filePath[0] != '/')
-		filePath = lastDatabasePath + "/" + filePath;
+	if (!QDir::isAbsolutePath(filePath)) filePath = lastDatabasePath + "/" + filePath;
 
 	// load new file
 	QPixmap tmpPixmap(filePath);
