@@ -20,7 +20,7 @@
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
 
-#ifndef NOOPENCV
+#ifndef NO_OPENCV
 #include <opencv/cv.h>
 #include <opencv/functions.h>
 #include <opencv/IplImageWrapper.h>
@@ -628,6 +628,7 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		double smoothing, double contrastReduction, double noise)
 
 {
+#ifndef NO_OPENCV
 	// check wether dir/file/object have been selected
 	Object *obj = orgAnnotations->getObject(objID);
 	if (NULL == obj)
@@ -784,7 +785,6 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		tmpImg = imgFile;
 	QImage transformedImg = QImage(croppedScaledImg.size(), QImage::Format_RGB32);
 
-#ifndef NOOPENCV
 	// we will use the OpenCV library .. in order to avoid aliasing
 	// prepare two images .. scale the original image down and up, in this way
 	// we know that it will be save to use by the QPainter
@@ -834,7 +834,6 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		addGaussianNoise(cvImgTmp, noise, random);
 		cvCopy(cvImgTmp, &cvImgDest);
 	}
-#endif
 
 	// draw the down- and upscaled image
 	QPainter p(&croppedScaledImg);
@@ -852,6 +851,9 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 	p.end();
 
 	return croppedScaledImg;
+#else
+	return QPixmap();
+#endif
 }
 
 QPixmap ImageExtractDialog::sampleObj(QImage& imgFile, IA::ID objID, bool drawBoundingBox)

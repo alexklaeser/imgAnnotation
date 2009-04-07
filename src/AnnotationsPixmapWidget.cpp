@@ -519,6 +519,7 @@ void AnnotationsPixmapWidget::mouseReleaseEvent(QMouseEvent * event)
 			// handle the left dragged over to right size, the top over the bottom
 			// side, and vice versa
 			double tmp;
+
 			if (box.left() > box.right()) {
 				tmp = box.left();
 				box.setLeft(box.right());
@@ -531,11 +532,10 @@ void AnnotationsPixmapWidget::mouseReleaseEvent(QMouseEvent * event)
 			}
 			
 			// check whether the box is valid, otherwise restore the original box
-			if (box.width() * box.height() <= 10 && _orgBox.isValid()) {
+			if (box.width() * box.height() <= 10)
 				box = _orgBox;
+			if (box.isValid())
 				obj->set("bbox", rect2str(box).toStdString());
-		
-			}
 			_orgBox = QRectF();
 
 			// send the signal that the size of the bounding box has changed
