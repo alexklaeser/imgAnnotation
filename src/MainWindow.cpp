@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent, Qt::WFlags flags)
 	setCentralWidget(scrollArea);
 //	propertiesTableWidget->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
 
+	propertyList << "<ID>";
+
 	// theses properties cannot be used/edited/seen directly by the user in the table view
 	reservedProperties << "bbox" << "fixpoints";
 	copiedObj = NULL;
