@@ -19,10 +19,12 @@
 
 #include <boost/foreach.hpp>
 #include <boost/algorithm/string.hpp>
-#include <opencv/cv.h>
 
+#ifndef NO_OPENCV
+#include <opencv/cv.h>
 #include <opencv/functions.h>
 #include <opencv/IplImageWrapper.h>
+#endif
 
 #include <ImgAnnotations.h>
 #include "functions.h"
@@ -626,6 +628,7 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 		double smoothing, double contrastReduction, double noise)
 
 {
+#ifndef NO_OPENCV
 	// check wether dir/file/object have been selected
 	Object *obj = orgAnnotations->getObject(objID);
 	if (NULL == obj)
@@ -848,6 +851,9 @@ QPixmap ImageExtractDialog::cropObj(QImage &imgFile, ID objID, bool drawBounding
 	p.end();
 
 	return croppedScaledImg;
+#else
+	return QPixmap();
+#endif
 }
 
 QPixmap ImageExtractDialog::sampleObj(QImage& imgFile, IA::ID objID, bool drawBoundingBox)
