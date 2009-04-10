@@ -28,7 +28,7 @@ private:
 	QString lastDirAddImg, lastDatabasePath, databasePath;
 
 	IA::ImgAnnotations annotations;
-	QStringList propertyList, reservedProperties;
+	QStringList propertyList, reservedProperties, filePropertyList;
 
 	IA::Object *copiedObj;
 
@@ -44,6 +44,7 @@ public:
 	MainWindow(QWidget *parent = 0, Qt::WFlags flags = 0);
 	QString currentFilePath() const;
 	QString currentDirPath() const;
+	IA::File *currentFile() const;
 	IA::ID currentObjectID() const;
 	IA::Object *currentObject() const;
 	IA::IDList fileObjectIDs() const;
@@ -70,16 +71,19 @@ public slots:
 	void on_addObjButton_clicked();
 	void on_delObjButton_clicked();
 	void on_addPropertyButton_clicked();
+	void on_addFilePropertyButton_clicked();
 //	void on_propertiesTableWidget_itemChanged();
 //	void on_objTypeComboBox_currentIndexChanged(const QString &);
 	void on_imgTreeWidget_currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *);
 	void on_objTableWidget_itemSelectionChanged();
 	void on_objTableWidget_currentItemChanged(QTableWidgetItem *, QTableWidgetItem *);
 	void on_objTableWidget_itemChanged(QTableWidgetItem*);
+	void on_filePropertiesTableWidget_itemChanged(QTableWidgetItem*);
 	void onPixmapWidgetActiveObjectChanged(IA::ID);
 	void onScrollAreaWheelTurned(QWheelEvent*);
 	void refreshImgView();
 	void refreshObjView();
+	void refreshFilePropertiesView();
 //	void refreshPropertiesView();
 	void nextPreviousFile(Direction);
 

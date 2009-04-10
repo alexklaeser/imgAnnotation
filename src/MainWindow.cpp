@@ -64,6 +64,11 @@ QString MainWindow::currentFilePath() const
 	return currentDirPath() + "/" + current->text(0);
 }
 
+IA::File* MainWindow::currentFile() const
+{
+	return annotations.getFile(currentFilePath().toStdString());
+}
+
 ID MainWindow::currentObjectID() const
 {
 	// hand the active object over to the PixmapWidget
@@ -174,10 +179,14 @@ void MainWindow::on_actionOpenDatabase_triggered()
 	annotations.loadFromFile(file.toStdString());
 
 	// create a list with all properties
-	propertyList = std2qt(annotations.getAllProperties());
+	propertyList = std2qt(annotations.getAllObjProperties());
 	propertyList.prepend("<ID>");
 	foreach (QString property, reservedProperties)
 		propertyList.removeAll(property);
+
+	// create a list with file properties
+	filePropertyList = std2qt(annotations.getAllFileProperties());
+	filePropertyList.sort();
 
 	// update the window title
 	setWindowTitle("ImageAnnotation - " + file.section('/', -1));
@@ -458,6 +467,23 @@ void MainWindow::on_addPropertyButton_clicked()
 	refreshObjView();
 }
 
+void MainWindow::on_addFilePropertyButton_clicked()
+{
+	// get the input from the lineEdit field
+	QString newProperty = filePropertyLineEdit->text().trimmed().toLower().replace(QRegExp("\\s+|:"), "_");
+
+	// check wether the property already exists or not
+	if (filePropertyList.contains(newProperty) || newProperty.isEmpty())
+		return;
+	filePropertyList << newProperty;
+	filePropertyList.sort();
+
+	// clear the text from the lineEdit
+	filePropertyLineEdit->setText("");
+
+	refreshFilePropertiesView();
+}
+	
 //void MainWindow::on_objTypeComboBox_currentIndexChanged(const QString &text)
 //{
 //	// check wether dir/file/object have been selected
@@ -500,6 +526,7 @@ void MainWindow::on_imgTreeWidget_currentItemChanged(QTreeWidgetItem *current, Q
 
 	// refresh the objTableWidget
 	refreshObjView();
+	refreshFilePropertiesView();
 
 	// select the first object as current obj or no object .. refresh will be done
 	// implicitely through the selection
@@ -542,6 +569,27 @@ void MainWindow::on_objTableWidget_itemChanged(QTableWidgetItem* item)
 		obj->set(property, value);
 
 	objTableWidget->resizeColumnsToContents();
+//	refreshObjView();
+}
+
+void MainWindow::on_filePropertiesTableWidget_itemChanged(QTableWidgetItem* item)
+{
+	// get the object in the data base
+	File *file = currentFile();
+	if (NULL == file)
+		return;
+
+	// query the properties and save the in the database
+	string property = filePropertiesTableWidget->item(item->row(), 0)->text().toStdString();
+	string value = item->text().toStdString();
+	if (property.empty())
+		file->clear(property);
+	else
+		file->set(property, value);
+
+	filePropertiesTableWidget->resizeColumnsToContents();
+	filePropertiesTableWidget->setSortingEnabled(false);
+	filePropertiesTableWidget->horizontalHeader()->setStretchLastSection(true);
 //	refreshObjView();
 }
 
@@ -715,6 +763,59 @@ void MainWindow::refreshImgView()
 	// unblock signals
 	imgTreeWidget->setUpdatesEnabled(true);
 	imgTreeWidget->blockSignals(false);
+}
+
+void MainWindow::refreshFilePropertiesView()
+{
+	// check wether dir/file/object have been selected
+	string filePath = currentFilePath().toStdString();
+	if (filePath.empty()) {
+		filePropertiesTableWidget->clear();
+		return;
+	}
+
+	// block the signals of the objTableWidget
+	filePropertiesTableWidget->blockSignals(true);
+	filePropertiesTableWidget->setSortingEnabled(false);
+
+	// adjust the size of the table
+	filePropertiesTableWidget->clear();
+	filePropertiesTableWidget->setRowCount(filePropertyList.size());
+	filePropertiesTableWidget->setColumnCount(2);
+
+	// clear our QTableWidget and add the objects of the current image to it
+	QTableWidgetItem *valueItem, *keyItem;
+	int iRow = 0;
+	IA::File* file = currentFile();
+	foreach(QString property, filePropertyList) {
+		QString value = QString::fromStdString(file->get(property.toStdString()));
+		keyItem = new QTableWidgetItem;
+		keyItem->setData(Qt::DisplayRole, property);
+		keyItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+
+		valueItem = new QTableWidgetItem;
+		valueItem->setData(Qt::DisplayRole, value);
+		valueItem->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEditable);
+
+		// add the key-value pair as new row
+		filePropertiesTableWidget->setItem(iRow, 0, keyItem);
+		filePropertiesTableWidget->setItem(iRow, 1, valueItem);
+
+		// increase the counter
+		iRow++;
+	}
+
+	// set the labels for the header row/column
+	QStringList headerList;
+	headerList << "property" << "value";
+	filePropertiesTableWidget->setHorizontalHeaderLabels(headerList);
+	filePropertiesTableWidget->resizeColumnsToContents();
+	filePropertiesTableWidget->setSortingEnabled(false);
+	filePropertiesTableWidget->horizontalHeader()->setStretchLastSection(true);
+	
+	// unblock the signals
+	filePropertiesTableWidget->setSortingEnabled(true);
+	filePropertiesTableWidget->blockSignals(false);
 }
 
 IDList MainWindow::selectedObjectIDs() const
