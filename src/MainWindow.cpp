@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <QtDebug>
 #include <QFileDialog>
+#include <QHeaderView>
 #include <QMessageBox>
 #include <stdio.h>
 #include <boost/foreach.hpp>
