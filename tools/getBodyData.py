@@ -2,6 +2,7 @@
 
 import sys
 import re
+import math
 
 HELP_USAGE = """
 
@@ -10,6 +11,7 @@ Usage: getBodyData.py <annotationFile>
 """
 
 regKeyVal = re.compile(r"([a-zA-Z0-9_\-]+)\s*:\s*(.+)($|#)")
+regSplit = re.compile(r"\s*,\s*")
 
 def addObject(bodies, iFile, iObj):
 	# if the current object has an body_id entry, keep it
@@ -18,8 +20,8 @@ def addObject(bodies, iFile, iObj):
 		if not bodies.has_key(iFile):
 			bodies[iFile] = {}
 		if not bodies[iFile].has_key(iBody):
-			bodies[iFile][iBody] = []
-		bodies[iFile][iBody].append(iObj)
+			bodies[iFile][iBody] = {}
+		bodies[iFile][iBody][iObj['type']] = iObj
 
 def readBodies(annotationFile):
 	bodies = {}
@@ -51,6 +53,26 @@ def readBodies(annotationFile):
 
 	return bodies
 
+# add output values to list for specified type
+def addColumns(myList, type, iBody):
+	if iBody.has_key(type):
+		iObj = iBody[type]
+		l = regSplit.split(iObj['bbox'])
+		view = 'NULL'
+		if iObj.has_key('view') and iObj.has_key('h_direction'):
+			if 'front' == iObj['view']:
+				view = 'front'
+			elif 'rear' == iObj['view']:
+				view = 'rear'
+			elif 'side' == iObj['view'] and 'left' == iObj['h_direction']:
+				view = 'left'
+			elif 'side' == iObj['view']:
+				view = 'right'
+		sigma = math.log(math.log(float(l[3])))
+		myList.extend([l[0], l[1], str(sigma), view])
+	else:
+		myList.extend(['NULL'] * 4)
+
 def main(argv):
 	# check options
 	args = sys.argv[1:]
@@ -60,12 +82,17 @@ def main(argv):
 
 	# read all annotated bodies
 	bodies = readBodies(args[0])
+	print "# format: faceX, faceY, faceSigma, faceView, headX, ..., upperBodyX, ..."
+	print "# view = { front, left, right, rear }"
+	print "# non existing body parts have the value 'NULL'"
 	for iFile, iBodies in bodies.iteritems():
 		print '#file:', iFile
 		for iBody in iBodies.itervalues():
-			print '#body'
-			for iObj in iBody:
-				print iObj['type'], iObj['view'], iObj['h_direction'], iObj['bbox']
+			out = []
+			addColumns(out, 'face', iBody)
+			addColumns(out, 'head', iBody)
+			addColumns(out, 'headShoulders', iBody)
+			print " ".join(out)
 
 
 if __name__ == "__main__":
