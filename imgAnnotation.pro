@@ -1,5 +1,7 @@
 # the target
 TARGET = imgAnnotation
+OPENCV_ROOT = c:/OpenCV2.0
+OPENCV_SUFFIX = 200
 
 # information about the architecture
 BIT = 32
@@ -27,8 +29,8 @@ SOURCES += src/*.cpp \
 
 # lib/include dirs
 #DEFINES += NO_OPENCV
-LIBS += -lcv -lcxcore -L$(HOME)/lib
+LIBS += -lcv$${OPENCV_SUFFIX} -lcxcore$${OPENCV_SUFFIX} -L$${OPENCV_ROOT}/lib
 INCLUDEPATH += src \
                ../common/src/annotation \
                ../common/src \
-               $(HOME)/include
+               $${OPENCV_ROOT}/include
