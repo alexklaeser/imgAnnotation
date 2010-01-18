@@ -26,8 +26,9 @@ SOURCES += src/*.cpp \
 	../common/src/annotation/ImgAnnotations.cpp
 
 # lib/include dirs
-DEFINES += NO_OPENCV
-#LIBS += -lcv -lcxcore -llapack -lblas -lcblas -latlas
+#DEFINES += NO_OPENCV
+LIBS += -lcv -lcxcore -L$(HOME)/lib
 INCLUDEPATH += src \
                ../common/src/annotation \
-               ../common/src
+               ../common/src \
+               $(HOME)/include
