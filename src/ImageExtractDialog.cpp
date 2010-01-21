@@ -1268,7 +1268,6 @@ void ImageExtractDialog::on_heightSpinBox_valueChanged(int newValue)
 
 void ImageExtractDialog::on_filteredObjTreeWidget_currentItemChanged(QTreeWidgetItem *currentItem)
 {
-	printf("Checkpoint 0\n");
 	if (!currentItem)
 		return;
 
