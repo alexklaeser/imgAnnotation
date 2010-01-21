@@ -482,14 +482,9 @@ void ImageExtractDialog::computeAlignment()
 QImage ImageExtractDialog::loadImg(QString filePath)
 {
 	// check wether we have a relative or absolute path
-	QString absoluteDir;
-	if (filePath[0] != '/')
-		absoluteDir = *orgDatabasePath + "/";
+	if (!QDir::isAbsolutePath(filePath)) filePath = *orgDatabasePath + "/" + filePath;
 
-	//printf("dir: %s\nabsoluteDir :%s\n\n", dir.toAscii().constData(), absoluteDir.toAscii().constData());
-
-	// load new file
-	filePath = absoluteDir + filePath;
+	//printf("file: %s\n", filePath.toAscii().constData());
 	return QImage(filePath);
 }
 
@@ -1273,6 +1268,7 @@ void ImageExtractDialog::on_heightSpinBox_valueChanged(int newValue)
 
 void ImageExtractDialog::on_filteredObjTreeWidget_currentItemChanged(QTreeWidgetItem *currentItem)
 {
+	printf("Checkpoint 0\n");
 	if (!currentItem)
 		return;
 
