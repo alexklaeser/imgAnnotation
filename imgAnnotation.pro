@@ -1,7 +1,8 @@
 # the target
 TARGET = imgAnnotation
-OPENCV_ROOT = c:/OpenCV2.0
-OPENCV_SUFFIX = 200
+OPENCV_ROOT = $(HOME)
+#OPENCV_ROOT = c:/OpenCV2.0
+#OPENCV_SUFFIX = 200
 
 # information about the architecture
 BIT = 32
