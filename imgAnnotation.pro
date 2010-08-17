@@ -1,5 +1,6 @@
 # the target
 TARGET = imgAnnotation
+DEFINES += NO_OPENCV # comment out this line if you want to use opencv
 OPENCV_ROOT = $(HOME)
 #OPENCV_ROOT = c:/OpenCV2.0
 #OPENCV_SUFFIX = 200
@@ -29,9 +30,10 @@ SOURCES += src/*.cpp \
 	../common/src/annotation/ImgAnnotations.cpp
 
 # lib/include dirs
-#DEFINES += NO_OPENCV
-LIBS += -lcv$${OPENCV_SUFFIX} -lcxcore$${OPENCV_SUFFIX} -L$${OPENCV_ROOT}/lib
-INCLUDEPATH += src \
-               ../common/src/annotation \
-               ../common/src \
-               $${OPENCV_ROOT}/include
+INCLUDEPATH += src $${INCLUDEPATH}
+
+# add opencv libraries and include path
+!contains(DEFINES, NO_OPENCV) {
+	LIBS += -lcv$${OPENCV_SUFFIX} -lcxcore$${OPENCV_SUFFIX} -L$${OPENCV_ROOT}/lib
+	INCLUDEPATH += $${OPENCV_ROOT}/include
+}
