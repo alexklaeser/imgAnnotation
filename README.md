@@ -26,11 +26,14 @@ Compilation
 
 On Ubuntu, I used the following lines to compile the tool:
 
-	  sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libboost1.53-all-dev
-	  qmake imgAnnotation.pro
-	  make
-	  # compilation is done and you can launch the tool
-	  ./imgAnnotation
+	sudo apt-get install build-essential \
+		libqt4-core libqt4-dev libqt4-gui qt4-dev-tools \
+		libboost1.53-all-dev \
+		libcv2.4 libcv-dev
+	qmake imgAnnotation.pro
+	make
+	# compilation is done and you can launch the tool
+	./imgAnnotation
 
 Screenshots
 ===========
