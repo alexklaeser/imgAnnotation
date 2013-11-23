@@ -21,6 +21,16 @@ If OpenCV is enabled, the following features are available, as well:
 
 In the Image Annotation Tool, you have a menu help / shortcuts that gives you a short list of the most common short cuts. Otherwise, keep the cursor for a longer while over buttons or text fields (in the extract dialog) to get some more hints and information.
 
+Compilation
+===========
+
+On Ubuntu, I used the following lines to compile the tool:
+	  sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libboost1.53-all-dev
+	  qmake imgAnnotation.pro
+	  make
+	  # compilation is done and you can launch the tool
+	  ./imgAnnotation
+
 Screenshots
 ===========
 
