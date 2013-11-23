@@ -1,9 +1,6 @@
 # the target
 TARGET = imgAnnotation
-DEFINES += NO_OPENCV # comment out this line if you want to use opencv
-OPENCV_ROOT = $(HOME)
-#OPENCV_ROOT = c:/OpenCV2.0
-#OPENCV_SUFFIX = 200
+#DEFINES += NO_OPENCV # comment out this line if you want to use opencv
 
 # some project options
 TEMPLATE = app
@@ -20,7 +17,8 @@ UI_DIR = src/ui
 FORMS += src/*.ui
 HEADERS += src/*.h \
 	src/geometry/*.h \
-	src/numeric/*.h
+	src/numeric/*.h \
+	src/opencv/*.h
 SOURCES += src/*.cpp
 
 # lib/include dirs
@@ -28,6 +26,5 @@ INCLUDEPATH += src $${INCLUDEPATH}
 
 # add opencv libraries and include path
 !contains(DEFINES, NO_OPENCV) {
-	LIBS += -lcv$${OPENCV_SUFFIX} -lcxcore$${OPENCV_SUFFIX} -L$${OPENCV_ROOT}/lib
-	INCLUDEPATH += $${OPENCV_ROOT}/include
+	LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc
 }
