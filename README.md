@@ -52,29 +52,29 @@ Format of alignment data file
 
 The format in which the database is saved is as follows. All annotations belonging to a specific images follow a line indicating the image filename:
 
-file: <imageFileName>
+file: &lt;imageFileName&gt;
 
 The path can be absolute or relative (to the position of the annotation database file). 
 
 An object anotation is indicated by a line of the format:
 
-object: <ID>
+object: &lt;ID&gt;
 
 The ID is a unique and positive integer number or -1 in which case an unique ID is assigned when the database file is loaded into the annotation tool.
 
 All properties belonging to an object follow the 'object:...' line. Their format is given by:
 
-<key>: <value>
+&lt;key&gt;: &lt;value&gt;
 
 In general, keys and values can be chosen arbitrarily. Nevertheless, there are two properties which are of particular interest to the tool and which need to be in a specific format:
 
-bbox: <x>, <y>, <width>, <height>
+bbox: &lt;x&gt;, &lt;y&gt;, &lt;width&gt;, &lt;height&gt;
 can also be
-bbox: <x>, <y>, <width> x <height>
+bbox: &lt;x&gt;, &lt;y&gt;, &lt;width&gt; x &lt;height&gt;
 
 and
 
-fixpoints: <x1>, <y1>, <x2>, <y2>, ...
+fixpoints: &lt;x1&gt;, &lt;y1&gt;, &lt;x2&gt;, &lt;y2&gt;, ...
 
 The property 'bbox' indicates position and size of the object by a rectangle. X, y, width, and height can be floating point values. The property 'fixpoints' indicates x and y position of a set of points that can optionally be used to align annotated objects and to normalize them with respect to rotation. For "fixpoints", the number of points needs to be even.
 
