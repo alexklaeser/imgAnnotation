@@ -97,7 +97,7 @@ License conditions
 
 The Image Annotation Tool for image annotations with pixelwise masks
 
-Copyright (C) 2007 Alexander Klaeser
+Copyright (C) 2007-2013 Alexander Klaeser
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
