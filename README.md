@@ -18,3 +18,12 @@ Features:
 * generation of random samples per annotated object by applying various distortion methods
 
 In the Image Annotation Tool, you have a menu help->shortcuts that gives you a short list of the most common short cuts. Otherwise, keep the cursor for a longer while over buttons or text fields (in the extract dialog) to get some more hints and information.
+
+Screenshots
+-----------
+
+![Main window with two bounding boxes annotated; for each bounding box alignment points have been specified](https://raw.github.com/alexklaeser/imgAnnotation/master/screenshots/main_window.png)
+![Image extraction dialog: filter criteria for objects](https://raw.github.com/alexklaeser/imgAnnotation/master/screenshots/extraction1_object_selection.png)
+![Image extraction dialog: parameters for image normalization](https://raw.github.com/alexklaeser/imgAnnotation/master/screenshots/extraction2_normalization.png)
+![Image extraction dialog: for the final image extraction, a subset of images can be selected](https://raw.github.com/alexklaeser/imgAnnotation/master/screenshots/extraction3_subset_selection.png)
+![Image extraction dialog: sampling parameters for extracted images](https://raw.github.com/alexklaeser/imgAnnotation/master/screenshots/extraction4_resampling.png)
