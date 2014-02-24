@@ -30,7 +30,7 @@ On Ubuntu, I used the following lines to compile the tool:
 		libqt4-core libqt4-dev libqt4-gui qt4-dev-tools \
 		libboost1.53-all-dev \
 		libcv2.4 libcv-dev
-	qmake imgAnnotation.pro
+	qmake-qt4 imgAnnotation.pro
 	make
 	# compilation is done and you can launch the tool
 	./imgAnnotation
