@@ -8,7 +8,9 @@
 #include "MainWindow.h"
 
 class PixmapWidget;
-class IA::ImgAnnotations;
+namespace IA {
+	class ImgAnnotations;
+}
 
 
 class ImageExtractDialog : public QDialog, private Ui::ImageExtractionDialog
