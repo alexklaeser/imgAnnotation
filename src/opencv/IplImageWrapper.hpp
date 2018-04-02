@@ -127,7 +127,7 @@ const IplImage* IplImageWrapper::operator->() const
 inline
 bool IplImageWrapper::hasMask() const
 {
-	return _mask;
+	return (bool)_mask;
 }
 
 inline
